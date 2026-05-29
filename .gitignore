@@ -1,0 +1,33 @@
+# Gradle
+.gradle/
+build/
+captures/
+*.apk
+*.aab
+*.ap_
+*.dex
+
+# Android Studio / IntelliJ
+.idea/
+*.iml
+local.properties
+.cxx/
+
+# Kotlin
+.kotlin/
+
+# Coverage / reports
+app/build/reports/
+**/kover/
+
+# Java
+*.class
+*.log
+*.hprof
+
+# macOS
+.DS_Store
+
+# Misc
+*.swp
+.env

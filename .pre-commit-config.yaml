@@ -1,0 +1,52 @@
+# Pre-commit hooks for wrist-arcana-android (Wear OS port).
+# Install: pre-commit install
+# Run manually: pre-commit run --all-files
+#
+# NOTE: no `no-commit-to-branch` hook by design — the Ralph loop commits
+# state-only changes (scripts/ralph/state.json) directly to `main`.
+minimum_pre_commit_version: "3.7.1"
+default_install_hook_types:
+  - pre-commit
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+    hooks:
+      - id: check-yaml
+      - id: check-json
+      - id: detect-private-key
+      - id: check-merge-conflict
+      - id: check-case-conflict
+      - id: end-of-file-fixer
+        exclude: '^\.github/workflows/(claude-code-review\.yml|claude\.yml)$'
+      - id: mixed-line-ending
+        args: ["--fix=lf"]
+      - id: trailing-whitespace
+        exclude: '^\.github/workflows/(claude-code-review\.yml|claude\.yml)$'
+      - id: check-added-large-files
+        args: ["--maxkb=1024"]
+        # Card art lives under res/drawable-*; these are intentionally large.
+        exclude: '^app/src/main/res/(drawable|raw)/'
+  - repo: https://github.com/Yelp/detect-secrets
+    rev: v1.5.0
+    hooks:
+      - id: detect-secrets
+        args: ["--baseline", ".secrets.baseline"]
+  - repo: https://github.com/shellcheck-py/shellcheck-py
+    rev: v0.10.0.1
+    hooks:
+      - id: shellcheck
+  # TODO(Epic 1): enable ktlint as a fast pre-commit gate once the Gradle Wear
+  # module + ktlint plugin are in place. Until then, ktlint/detekt run in CI via
+  # scripts/check-all.sh.
+  # - repo: local
+  #   hooks:
+  #     - id: ktlint
+  #       name: ktlint
+  #       entry: ./gradlew ktlintCheck
+  #       language: system
+  #       files: '\.kt$'
+  #       pass_filenames: false
+ci:
+  autofix_commit_msg: 'style: auto-fix by pre-commit hooks'
+  autoupdate_commit_msg: 'chore: update pre-commit hooks'
+  skip: []
